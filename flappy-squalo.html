@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flappy Squalo</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div id="game-container">
+    <div id="bird"></div>
+    <div id="pipe-top" class="pipe"></div>
+    <div id="pipe-bottom" class="pipe"></div>
+    <div id="score">0</div>
+    <div id="game-over">
+      <p>Game Over!</p>
+      <p id="final-score"></p>
+      <button onclick="restartGame()">Riprova</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

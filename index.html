@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gixx Arcade</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(rgb(31, 31, 242), rgba(200, 26, 26, 0.825));
+      font-family: sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .home-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .home-container h1 {
+      font-size: 36px;
+      margin-bottom: 40px;
+      color: #fff;
+      filter: drop-shadow(1px 1px 20px black);
+    }
+
+    .record-icon {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 100;
+    }
+
+    .records-box {
+      position: fixed;
+      top: 60px;
+      right: 15px;
+      background: rgba(0, 0, 0, 0.9);
+      border: 2px solid #fff;
+      border-radius: 10px;
+      padding: 15px;
+      color: white;
+      font-family: monospace;
+      font-size: 14px;
+      z-index: 100;
+      display: none;
+    }
+
+    .records-box h3 {
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .record {
+      margin: 4px 0;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .record:hover {
+      color: red;
+    }
+
+    .game-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .game-card {
+      width: 180px;
+      background: linear-gradient(rgb(230, 27, 27),rgb(53, 53, 219));
+      padding: 15px;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: transform 0.2s;
+      border: solid 1px black;
+    }
+
+    .game-card:hover {
+      transform: scale(1.05);
+    }
+
+    .game-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    .game-card p {
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      color: black;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .game-card {
+        width: 90%;
+      }
+
+      .home-container h1 {
+        font-size: 28px;
+      }
+
+      .record-icon {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="home-container">
+    <h1>🎮 Gixx Arcade</h1>
+
+    <!-- Icona dei Record -->
+    <div class="record-icon" onclick="toggleRecords()">🏆</div>
+
+    <!-- Box Record -->
+    <div class="records-box" id="recordsBox">
+      <h3>🏆 Record</h3>
+      <div class="record" onclick="resetRecord('flappy')">Flappy Squalo: <span id="recordFlappy">0</span></div>
+      <div class="record" onclick="resetRecord('tris')">Tris: <span id="recordTris">0</span></div>
+      <div class="record" onclick="resetRecord('snake')">Snake: <span id="recordSnake">0</span></div>
+    </div>
+
+    <!-- Lista Giochi -->
+    <div class="game-list">
+      <div class="game-card" onclick="location.href='flappy-squalo.html'">
+        <img src="tralla.png" alt="Flappy Squalo">
+        <p>Flappy Squalo</p>
+      </div>
+      <div class="game-card" onclick="location.href='tris.html'">
+        <img src="tris.png" alt="Tris">
+        <p>Gioco del Tris</p>
+      </div>
+      <div class="game-card" onclick="location.href='snake.html'">
+        <img src="snake.png" alt="Snake">
+        <p>Snake</p>
+      </div>
+
+      <div class="game-card" onclick="location.href='pong.html'">
+        <img src="pong.jpg" alt="Snake">
+        <p>Pong</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('recordFlappy').textContent = localStorage.getItem('recordFlappy') || 0;
+    document.getElementById('recordTris').textContent = localStorage.getItem('recordTris') || 0;
+    document.getElementById('recordSnake').textContent = localStorage.getItem('recordSnake') || 0;
+
+    function resetRecord(key) {
+      const map = {
+        flappy: 'recordFlappy',
+        tris: 'recordTris',
+        snake: 'recordSnake'
+      };
+      localStorage.setItem(map[key], 0);
+      document.getElementById(map[key]).textContent = 0;
+      alert(`Record ${key} azzerato!`);
+    }
+
+    function toggleRecords() {
+      const box = document.getElementById('recordsBox');
+      box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    }
+  </script>
+</body>
+</html>

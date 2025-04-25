@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gioco del Tris</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Fredoka One', cursive;
+      background: linear-gradient(135deg, #00c9ff, #92fe9d);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 30px;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(5px);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      color: #fff;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    .settings-btn {
+      font-size: 1.8rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      transition: transform 0.2s;
+    }
+
+    .settings-btn:hover {
+      transform: rotate(20deg);
+    }
+
+    .container {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .game-container {
+      text-align: center;
+      background-color: rgba(255, 255, 255, 0.25);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 10px;
+      margin: 0 auto 20px;
+    }
+
+    .cell {
+      width: 100px;
+      height: 100px;
+      font-size: 2.5rem;
+      border-radius: 12px;
+      border: 3px solid #fff;
+      background-color: #ffffffcc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .cell:hover {
+      background-color: #eee;
+      transform: scale(1.05);
+    }
+
+    .cell.x::before {
+      content: "X";
+      color: #e74c3c;
+    }
+
+    .cell.o::before {
+      content: "O";
+      color: #2980b9;
+    }
+
+    .winning-message {
+      font-size: 1.5rem;
+      color: #fff;
+      background-color: #2c3e50cc;
+      padding: 10px 20px;
+      border-radius: 10px;
+      display: none;
+      margin-bottom: 10px;
+    }
+
+    .winning-message.show {
+      display: inline-block;
+    }
+
+    .game-container button {
+      background-color: #2ecc71;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .game-container button:hover {
+      background-color: #27ae60;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .modal-content h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .modal-content button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .modal-content button:hover {
+      background-color: #2980b9;
+    }
+
+    @media (max-width: 500px) {
+      .board {
+        grid-template-columns: repeat(3, 80px);
+      }
+
+      .cell {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+      }
+
+      .modal-content {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Gioco del Tris</h1>
+    <button class="settings-btn" onclick="openSettings()">⚙️</button>
+  </div>
+
+  <div class="modal active" id="modeModal">
+    <div class="modal-content">
+      <h2>Scegli la modalità</h2>
+      <button onclick="selectMode('bot')">Contro Bot</button>
+      <button onclick="selectMode('friend')">Contro un Amico</button>
+    </div>
+  </div>
+
+  <div class="modal" id="levelModal">
+    <div class="modal-content">
+      <h2>Livello Bot</h2>
+      <button onclick="selectBotLevel(1)">1</button>
+      <button onclick="selectBotLevel(2)">2</button>
+      <button onclick="selectBotLevel(3)">3</button>
+      <button onclick="selectBotLevel(4)">4</button>
+      <button onclick="selectBotLevel(5)">5</button>
+    </div>
+  </div>
+
+  <div class="modal" id="settingsModal">
+    <div class="modal-content">
+      <h2>Chi inizia per primo?</h2>
+      <button onclick="setStartingPlayer(true)">Tu</button>
+      <button onclick="setStartingPlayer(false)">Bot</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="game-container">
+      <div class="board" id="board"></div>
+      <div class="winning-message" id="winningMessage">
+        <span id="winningMessageText"></span>
+      </div>
+      <button onclick="startGame()">Ricomincia</button>
+    </div>
+  </div>
+
+  <script>
+    const board = document.getElementById('board');
+    const winningMessage = document.getElementById('winningMessage');
+    const winningMessageText = document.getElementById('winningMessageText');
+
+    let cells = [];
+    let currentPlayer = 'x';
+    let isGameOver = false;
+    let gameMode = null;
+    let botLevel = 1;
+    let botStarts = false;
+
+    const WINNING_COMBINATIONS = [
+      [0,1,2],[3,4,5],[6,7,8],
+      [0,3,6],[1,4,7],[2,5,8],
+      [0,4,8],[2,4,6]
+    ];
+
+    function startGame() {
+      board.innerHTML = '';
+      winningMessage.classList.remove('show');
+      cells = [];
+      isGameOver = false;
+
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.dataset.index = i;
+        cell.addEventListener('click', onCellClick, { once: true });
+        board.appendChild(cell);
+        cells.push(cell);
+      }
+
+      currentPlayer = botStarts ? 'o' : 'x';
+      if (gameMode === 'bot' && botStarts) {
+        setTimeout(botMove, 300);
+      }
+    }
+
+    function onCellClick(e) {
+      const cell = e.target;
+      if (isGameOver) return;
+      placeMark(cell, currentPlayer);
+      if (checkWin(currentPlayer)) {
+        endGame(false);
+      } else if (isDraw()) {
+        endGame(true);
+      } else {
+        currentPlayer = currentPlayer === 'x' ? 'o' : 'x';
+        if (gameMode === 'bot' && currentPlayer === 'o') {
+          setTimeout(botMove, 300);
+        }
+      }
+    }
+
+    function placeMark(cell, player) {
+      cell.classList.add(player);
+    }
+
+    function checkWin(player) {
+      return WINNING_COMBINATIONS.some(comb =>
+        comb.every(i => cells[i].classList.contains(player))
+      );
+    }
+
+    function isDraw() {
+      return cells.every(cell =>
+        cell.classList.contains('x') || cell.classList.contains('o')
+      );
+    }
+
+    function endGame(draw) {
+      isGameOver = true;
+      winningMessageText.innerText = draw ? "Pareggio!" : `${currentPlayer.toUpperCase()} ha vinto!`;
+      winningMessage.classList.add('show');
+    }
+
+    function botMove() {
+      if (isGameOver) return;
+      const available = cells
+        .map((cell, i) => (!cell.classList.contains('x') && !cell.classList.contains('o')) ? i : null)
+        .filter(i => i !== null);
+
+      let move;
+      if (botLevel === 5) {
+        move = minimax(cells, 'o').index;
+      } else {
+        move = available[Math.floor(Math.random() * available.length)];
+      }
+
+      if (move !== undefined) {
+        placeMark(cells[move], 'o');
+        cells[move].removeEventListener('click', onCellClick);
+        if (checkWin('o')) {
+          endGame(false);
+        } else if (isDraw()) {
+          endGame(true);
+        } else {
+          currentPlayer = 'x';
+        }
+      }
+    }
+
+    function minimax(newBoard, player) {
+      const availSpots = newBoard
+        .map((cell, i) => (!cell.classList.contains('x') && !cell.classList.contains('o')) ? i : null)
+        .filter(i => i !== null);
+
+      if (checkWin('x')) return { score: -10 };
+      if (checkWin('o')) return { score: 10 };
+      if (availSpots.length === 0) return { score: 0 };
+
+      const moves = [];
+
+      for (let i = 0; i < availSpots.length; i++) {
+        const index = availSpots[i];
+        const cell = newBoard[index];
+        cell.classList.add(player);
+
+        const result = minimax(newBoard, player === 'o' ? 'x' : 'o');
+        moves.push({ index, score: result.score });
+
+        cell.classList.remove(player);
+      }
+
+      let bestMove;
+      if (player === 'o') {
+        let max = -Infinity;
+        moves.forEach((m, i) => { if (m.score > max) { max = m.score; bestMove = i; } });
+      } else {
+        let min = Infinity;
+        moves.forEach((m, i) => { if (m.score < min) { min = m.score; bestMove = i; } });
+      }
+
+      return moves[bestMove];
+    }
+
+    function selectMode(mode) {
+      gameMode = mode;
+      document.getElementById('modeModal').classList.remove('active');
+      if (mode === 'bot') {
+        document.getElementById('levelModal').classList.add('active');
+      } else {
+        startGame();
+      }
+    }
+
+    function selectBotLevel(level) {
+      botLevel = level;
+      document.getElementById('levelModal').classList.remove('active');
+      document.getElementById('settingsModal').classList.add('active');
+    }
+
+    function setStartingPlayer(humanStarts) {
+      botStarts = !humanStarts;
+      document.getElementById('settingsModal').classList.remove('active');
+      startGame();
+    }
+
+    function openSettings() {
+      document.getElementById('settingsModal').classList.add('active');
+    }
+  </script>
+</body>
+</html>

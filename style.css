@@ -1,0 +1,153 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(rgb(31, 31, 242),rgba(200, 26, 26, 0.825));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: sans-serif;
+}
+
+/* GAME CONTAINER */
+#game-container {
+  position: relative;
+  width: 400px;
+  height: 600px;
+  background-image: url('sfondoj.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  overflow: hidden;
+  border: 2px solid #333;
+  border-radius: 15px;
+}
+
+/* SQUALO */
+#bird {
+  position: absolute;
+  width: 65px;
+  height: 90px;
+  background-image: url('tralla.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  top: 250px;
+  left: 100px;
+}
+
+/* TUBI */
+.pipe {
+  position: absolute;
+  width: 60px;
+  background: linear-gradient(red, blue);
+  border-radius: 10px;
+  border: solid 2px black;
+}
+
+#pipe-top {
+  top: 0;
+}
+
+#pipe-bottom {
+  bottom: 0;
+}
+
+/* SCORE */
+#score {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* GAME OVER */
+#game-over {
+  display: none;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+  z-index: 10;
+}
+
+#game-over p {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+#game-over button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #00c853;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* HOME PAGE ARCADE */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 40px;
+  height: 100vh;
+  text-align: center;
+}
+
+.home-container h1 {
+  font-size: 36px;
+  margin-bottom: 40px;
+  color: #fff;
+}
+
+.game-list {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.game-card {
+  width: 200px;
+  padding: 20px;
+  border-radius: 20px;
+  
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: transform 0.2s;
+  border: solid 1px black;
+}
+
+.game-card:hover {
+  transform: scale(1.05);
+}
+
+.game-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.game-card p {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+h1{
+  filter: drop-shadow(1px 1px 20px black);
+}
+
+
